@@ -23,25 +23,33 @@ echo "--- 🛰️  Configuring Lab Workspace ---"
 tether_bashrc() {
     local tether_block
     
-    # This block only activates if the specific REPO_DIR exists on the system.
+    # We escape the first '$' in REPO_DIR so it's written as a literal variable.
+    # This way, if the student moves the folder, the script stays dynamic.
     tether_block=$(cat <<EOF
 # --- Lab Environment Setup (Added $(date +'%Y-%m-%d')) ---
-if [ -d "$REPO_DIR" ]; then
-    export REPO_ROOT="$REPO_DIR"
+# Use the current directory of the script if REPO_ROOT isn't set
+export REPO_ROOT="$REPO_DIR"
+if [ -d "\$REPO_ROOT" ]; then
     export PATH="\$PATH:\$REPO_ROOT/bin"
     # Source the repo-local .bashrc for custom prompts and aliases
-    [ -f "\$REPO_ROOT/.bashrc" ] && source "\$REPO_ROOT/.bashrc"
+    [ -f "\$REPO_ROOT/.bashrc" ] && . "\$REPO_ROOT/.bashrc"
 fi
 # -------------------------------------------------------
 EOF
 )
+
+    # Ensure ~/.profile sources ~/.bashrc (Essential for Codespaces Login Shells)
+    if [ -f ~/.profile ] && ! grep -q "source ~/.bashrc" ~/.profile; then
+        echo -e "\nif [ -n \"\$BASH_VERSION\" ]; then\n    [ -f ~/.bashrc ] && . ~/.bashrc\nfi" >> ~/.profile
+        echo "✅ Success: ~/.profile linked to ~/.bashrc"
+    fi
 
     # Prevent duplicate entries in ~/.bashrc
     if ! grep -q "REPO_ROOT=\"$REPO_DIR\"" ~/.bashrc; then
         echo "$tether_block" >> ~/.bashrc
         echo "✅ Success: Repository tethered to ~/.bashrc"
     else
-        echo "ℹ️  System: ~/.bashrc is already configured."
+        echo "ℹ️  System: ~/.bashrc is already configured for this path."
     fi
 }
 
