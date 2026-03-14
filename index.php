@@ -27,7 +27,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <title>Users Table</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/spacelab/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/sketchy/bootstrap.min.css">
 </head>
 <body class="p-4">
     <div class="container">
