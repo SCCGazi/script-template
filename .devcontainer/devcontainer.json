@@ -1,32 +1,10 @@
 {
-    "name": "Linux Script Settings",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {
-            "version": "latest",
-            "moby": true
-        }
-    },
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "bash",
-                "editor.formatOnSave": true
-            },
-            "extensions": [
-                "mads-hartmann.bash-ide-vscode",
-                "redhat.vscode-yaml",
-                "ms-azuretools.vscode-docker",
-                "irongeek.vscode-env"
-            ]
-        }
-    },
-    "forwardPorts": [80, 8080, 3306],
-    "portsAttributes": {
-        "80": { "label": "Apache (HTTP)" },
-        "8080": { "label": "Dev Server" },
-        "3306": { "label": "MariaDB (MySQL)" }
-    },
-    "postCreateCommand": "/bin/bash ./.devcontainer/install-tools.sh",
-    "postAttachCommand": "git pull && /bin/bash ./.devcontainer/setup-env.sh && source ~/.bashrc && . ./bin/repo.sh"
+  "name": "LAMP setup",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+ "postCreateCommand": "sudo apt-get update && sudo apt-get install -y git apache2 php libapache2-mod-php mariadb-server php-mysqli",
+  "postAttachCommand": "cp -f .bashrc ~/.bashrc && . ~/.bashrc && git pull --all",
+  "forwardPorts": [80]
 }
